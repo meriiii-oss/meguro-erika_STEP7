@@ -188,12 +188,12 @@ SET `price` = `price` * 1.10;
 /* 設問27.2024年5月以前（5月1日より前（4月末まで））に行われた注文（orders）のorder_dateをすべて「2024-05-01」に統一する（更新する）SQLを書いてください。 */
 UPDATE `orders`
 SET `order_date` = '2024-05-01'
-WHERE `order_data` < '2024-04-30';
+WHERE `order_date` < '2024-04-30';
 
 /* 設問28.ユーザー名が「高橋健一」のレコードをusersテーブルから削除するSQLを書いてください。 ※関連する注文や明細はそのままにします。 */
 DELETE
 FROM `users`
-WHERE `id` = 5;
+WHERE `name` = '高橋健一';
 
 /* 設問29.注文IDが5の明細（order_items）をすべて削除するSQLを書いてください。 */
 DELETE
@@ -205,8 +205,11 @@ DELETE
 FROM `products`
 WHERE `id` 
 IN (
+    SELECT `id`
+    FROM (
     SELECT products.id
     FROM `products`
     LEFT JOIN order_items ON products.id = order_items.product_id
     WHERE order_items.product_id IS NULL
+    ) AS tmp
 );
